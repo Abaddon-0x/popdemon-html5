@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
     <title>Slap the Leader</title>
-
+    
     <!-- Primary SEO Meta Tags -->
     <meta name="description" content="The ultimate HTML5 meme game — punch to free world leaders from demons! Play now and compete for the top score!">
 
@@ -83,7 +83,7 @@ body { color: white; background-color: black; overflow: hidden; touch-action: no
 
     <script src="index.js"></script>
     <script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":45917232,"index.wasm":43699190},"focusCanvas":true,"gdextensionLibs":[],"serviceWorker":"index.service.worker.js"};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":45917200,"index.wasm":43699190},"focusCanvas":true,"gdextensionLibs":[],"serviceWorker":"index.service.worker.js"};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -146,6 +146,7 @@ const engine = new Engine(GODOT_CONFIG);
             } catch (err) {
                 serviceWorkerRegistrationPromise = Promise.reject(new Error('Service worker registration failed.'));
             }
+            // There's a chance that installing the service worker would fix the issue
             Promise.race([
                 serviceWorkerRegistrationPromise.then((registration) => {
                     if (registration != null) {
@@ -153,6 +154,7 @@ const engine = new Engine(GODOT_CONFIG);
                     }
                     return registration;
                 }).then(() => engine.installServiceWorker()),
+                // For some reason, `getRegistration()` can stall
                 new Promise((resolve) => {
                     setTimeout(() => resolve(), 2000);
                 }),
@@ -162,6 +164,7 @@ const engine = new Engine(GODOT_CONFIG);
                 console.error('Error while registering service worker:', err);
             });
         } else {
+            // Display the message as usual
             const missingMsg = 'Error\nThe following features required to run Godot projects on the Web are missing:\n';
             displayFailureNotice(missingMsg + missing.join('\n'));
         }
